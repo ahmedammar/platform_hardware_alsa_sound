@@ -228,7 +228,13 @@ AudioHardwareALSA::openInputStream(uint32_t devices,
             err = mALSADevice->open(&(*it), devices, mode());
             if (err) break;
             in = new AudioStreamInALSA(this, &(*it), acoustics);
+            //set the format, channels, sampleRate to 0, so that it can make use of
+            //the parameter from the hardware default config
+            *format = 0;
+            *channels = 0;
+            *sampleRate = 0;
             err = in->set(format, channels, sampleRate);
+            LOGW("the hardware default channels  is %d, sampleRate is %d, format is %d", *channels, *sampleRate, *format);
             break;
         }
 
