@@ -22,6 +22,28 @@
 
 namespace android {
 
+status_t AudioPolicyManagerALSA::stopInput(audio_io_handle_t input)
+{
+    LOGV("stopInput() input %d", input);
+    ssize_t index = mInputs.indexOfKey(input);
+    if (index < 0) {
+        LOGW("stopInput() unknow input %d", input);
+        return BAD_VALUE;
+    }
+    AudioInputDescriptor *inputDesc = mInputs.valueAt(index);
+
+    if (inputDesc->mRefCount == 0) {
+        LOGW("stopInput() input %d already stopped", input);
+        return INVALID_OPERATION;
+    } else {
+        AudioParameter param = AudioParameter();
+      //  param.addInt(String8(AudioParameter::keyRouting), 0);
+         param.addInt(String8(AudioParameter::keyRouting), inputDesc->mDevice); //set the device name
+        mpClientInterface->setParameters(input, param.toString());
+        inputDesc->mRefCount = 0;
+        return NO_ERROR;
+    }
+}
 // ----------------------------------------------------------------------------
 // AudioPolicyManagerALSA
 // ----------------------------------------------------------------------------

@@ -41,7 +41,8 @@ class AudioPolicyManagerALSA: public AudioPolicyManagerBase
 public:
                 AudioPolicyManagerALSA(AudioPolicyClientInterface *clientInterface);
         virtual ~AudioPolicyManagerALSA();
-
+        
+	status_t stopInput(audio_io_handle_t input);
         // Nothing currently different between the Base implementation.
 };
 
