@@ -89,9 +89,14 @@ ssize_t AudioStreamOutALSA::write(const void *buffer, size_t bytes)
     status_t          err;
 
     do {
-        n = snd_pcm_writei(mHandle->handle,
-                           (char *)buffer + sent,
-                           snd_pcm_bytes_to_frames(mHandle->handle, bytes - sent));
+        if (mHandle->mmap)
+            n = snd_pcm_mmap_writei(mHandle->handle,
+                               (char *)buffer + sent,
+                               snd_pcm_bytes_to_frames(mHandle->handle, bytes - sent));
+	else
+            n = snd_pcm_writei(mHandle->handle,
+                               (char *)buffer + sent,
+                               snd_pcm_bytes_to_frames(mHandle->handle, bytes - sent));
         if (n == -EBADFD) {
             // Somehow the stream is in a bad state. The driver probably
             // has a bug and snd_pcm_recover() doesn't seem to handle this.
@@ -101,6 +106,7 @@ ssize_t AudioStreamOutALSA::write(const void *buffer, size_t bytes)
         }
         else if (n < 0) {
             if (mHandle->handle) {
+		LOGW("underrun and do recovery.....");
                 // snd_pcm_recover() will return 0 if successful in recovering from
                 // an error, or -errno if the error was unrecoverable.
                 n = snd_pcm_recover(mHandle->handle, n, 1);

@@ -50,6 +50,7 @@ struct alsa_handle_t {
     unsigned int        latency;         // Delay in usec
     unsigned int        bufferSize;      // Size of sample buffer
     void *              modPrivate;
+    int                 mmap; // mmap flags
 };
 
 typedef List<alsa_handle_t> ALSAHandleList;
