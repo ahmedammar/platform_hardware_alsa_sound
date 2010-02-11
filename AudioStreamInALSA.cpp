@@ -78,7 +78,10 @@ ssize_t AudioStreamInALSA::read(void *buffer, ssize_t bytes)
     status_t          err;
 
     do {
-        n = snd_pcm_readi(mHandle->handle, buffer, frames);
+        if (mHandle->mmap)
+            n = snd_pcm_mmap_readi(mHandle->handle, buffer, frames);
+        else
+            n = snd_pcm_readi(mHandle->handle, buffer, frames);
         if (n < frames) {
             if (mHandle->handle) {
                 if (n < 0) {
