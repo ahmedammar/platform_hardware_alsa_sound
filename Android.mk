@@ -38,7 +38,7 @@ ifeq ($(strip $(BOARD_USES_ALSA_AUDIO)),true)
 ifeq ($(BOARD_HAVE_BLUETOOTH),true)
   LOCAL_SHARED_LIBRARIES += liba2dp
 endif
-  LOCAL_MODULE_TAGS := optional
+  LOCAL_MODULE_TAGS := eng
   include $(BUILD_SHARED_LIBRARY)
 
 # This is the ALSA audio policy manager
@@ -61,7 +61,7 @@ endif
     libcutils \
     libutils \
     libmedia
-  LOCAL_MODULE_TAGS := optional
+  LOCAL_MODULE_TAGS := eng
   include $(BUILD_SHARED_LIBRARY)
 
 # This is the default ALSA module which behaves closely like the original
@@ -87,7 +87,7 @@ endif
   	liblog
 
   LOCAL_MODULE:= alsa.default
-  LOCAL_MODULE_TAGS := optional
+  LOCAL_MODULE_TAGS := eng
   include $(BUILD_SHARED_LIBRARY)
 
 # This is the default Acoustics module which is essentially a stub
@@ -107,7 +107,7 @@ endif
   LOCAL_SHARED_LIBRARIES := liblog
 
   LOCAL_MODULE:= acoustics.default
-  LOCAL_MODULE_TAGS := optional
+  LOCAL_MODULE_TAGS := eng
   include $(BUILD_SHARED_LIBRARY)
 
 endif
