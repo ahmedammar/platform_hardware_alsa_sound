@@ -92,7 +92,7 @@ struct acoustic_device_t {
 class ALSAMixer
 {
 public:
-    ALSAMixer();
+    ALSAMixer(const char *sndcard = "hw:00");
     virtual                ~ALSAMixer();
 
     bool                    isValid() { return !!mMixer[SND_PCM_STREAM_PLAYBACK]; }
@@ -352,6 +352,9 @@ protected:
     friend class ALSAStreamOps;
 
     ALSAMixer *         mMixer;
+    ALSAMixer *         mMixerSpdif;
+    ALSAMixer *         mMixerSgtl5000;
+    char *              mCurCard;
 
     alsa_device_t *     mALSADevice;
     acoustic_device_t * mAcousticDevice;
