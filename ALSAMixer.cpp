@@ -157,12 +157,13 @@ static const setVolume_t setVol[] = {
     snd_mixer_selem_set_capture_volume_all
 };
 
-ALSAMixer::ALSAMixer()
+ALSAMixer::ALSAMixer(const char *sndcard)
 {
     int err;
+    LOGI(" Init ALSAMIXER for SNDCARD : %s",sndcard);
 
-    initMixer (&mMixer[SND_PCM_STREAM_PLAYBACK], "AndroidOut");
-    initMixer (&mMixer[SND_PCM_STREAM_CAPTURE], "AndroidIn");
+    initMixer (&mMixer[SND_PCM_STREAM_PLAYBACK], sndcard);
+    initMixer (&mMixer[SND_PCM_STREAM_CAPTURE], sndcard);
 
     snd_mixer_selem_id_t *sid;
     snd_mixer_selem_id_alloca(&sid);
