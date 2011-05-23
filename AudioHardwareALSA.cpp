@@ -33,7 +33,7 @@
 
 #include "AudioHardwareALSA.h"
 #define SGTL5000 "imx-3stack"
-#define SPDIF    "MXC SPDIF"
+#define SPDIF    "imx-3stack-spdif"
 #define MAXCARDSNUM  2
 
 extern "C"
