@@ -87,6 +87,51 @@ struct acoustic_device_t {
     void *              modPrivate;
 };
 
+
+#define SND_MIXER_VOL_RANGE_MIN  (0)
+#define SND_MIXER_VOL_RANGE_MAX  (100)
+
+#define ALSA_NAME_MAX 128
+#define SND_MIXER_OUT_DEVICE    6
+
+#define ALSA_STRCAT(x,y) \
+    if (strlen(x) + strlen(y) < ALSA_NAME_MAX) \
+        strcat(x, y);
+        
+struct mixer_info_t;
+
+struct alsa_properties_t
+{
+    const AudioSystem::audio_devices device;
+    const char         *propName;
+    const char         *propDefault;
+    mixer_info_t       *mInfo;
+};
+
+#define ALSA_PROP(dev, name, out, in) \
+    {\
+        {dev, "alsa.mixer.playback." name, out, NULL},\
+        {dev, "alsa.mixer.capture." name, in, NULL}\
+    }
+
+struct mixer_info_t
+{
+    mixer_info_t() :
+        elem(0),
+        min(SND_MIXER_VOL_RANGE_MIN),
+        max(SND_MIXER_VOL_RANGE_MAX),
+        mute(false)
+    {
+    }
+
+    snd_mixer_elem_t *elem;
+    long              min;
+    long              max;
+    long              volume;
+    bool              mute;
+    char              name[ALSA_NAME_MAX];
+};
+
 // ----------------------------------------------------------------------------
 
 class ALSAMixer
@@ -109,6 +154,8 @@ public:
 
 private:
     snd_mixer_t *           mMixer[SND_PCM_STREAM_LAST+1];
+    alsa_properties_t       mixerMasterProp[SND_PCM_STREAM_LAST+1];
+    alsa_properties_t       mixerProp[SND_MIXER_OUT_DEVICE][SND_PCM_STREAM_LAST+1];
 };
 
 class ALSAControl

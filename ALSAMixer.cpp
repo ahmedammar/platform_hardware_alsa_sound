@@ -33,67 +33,12 @@
 
 #include "AudioHardwareALSA.h"
 
-#define SND_MIXER_VOL_RANGE_MIN  (0)
-#define SND_MIXER_VOL_RANGE_MAX  (100)
 
-#define ALSA_NAME_MAX 128
-
-#define ALSA_STRCAT(x,y) \
-    if (strlen(x) + strlen(y) < ALSA_NAME_MAX) \
-        strcat(x, y);
 
 namespace android
 {
 
 // ----------------------------------------------------------------------------
-
-struct mixer_info_t;
-
-struct alsa_properties_t
-{
-    const AudioSystem::audio_devices device;
-    const char         *propName;
-    const char         *propDefault;
-    mixer_info_t       *mInfo;
-};
-
-#define ALSA_PROP(dev, name, out, in) \
-    {\
-        {dev, "alsa.mixer.playback." name, out, NULL},\
-        {dev, "alsa.mixer.capture." name, in, NULL}\
-    }
-
-static alsa_properties_t
-mixerMasterProp[SND_PCM_STREAM_LAST+1] =
-        ALSA_PROP(AudioSystem::DEVICE_OUT_ALL, "master", "PCM", "Capture");
-
-static alsa_properties_t
-mixerProp[][SND_PCM_STREAM_LAST+1] = {
-    ALSA_PROP(AudioSystem::DEVICE_OUT_EARPIECE, "earpiece", "Earpiece", "Capture"),
-    ALSA_PROP(AudioSystem::DEVICE_OUT_SPEAKER, "speaker", "Speaker",  ""),
-    ALSA_PROP(AudioSystem::DEVICE_OUT_WIRED_HEADSET, "headset", "Headphone", "Capture"),
-    ALSA_PROP(AudioSystem::DEVICE_OUT_BLUETOOTH_SCO, "bluetooth.sco", "Bluetooth", "Bluetooth Capture"),
-    ALSA_PROP(AudioSystem::DEVICE_OUT_BLUETOOTH_A2DP, "bluetooth.a2dp", "Bluetooth A2DP", "Bluetooth A2DP Capture"),
-    ALSA_PROP(static_cast<AudioSystem::audio_devices>(0), "", NULL, NULL)
-};
-
-struct mixer_info_t
-{
-    mixer_info_t() :
-        elem(0),
-        min(SND_MIXER_VOL_RANGE_MIN),
-        max(SND_MIXER_VOL_RANGE_MAX),
-        mute(false)
-    {
-    }
-
-    snd_mixer_elem_t *elem;
-    long              min;
-    long              max;
-    long              volume;
-    bool              mute;
-    char              name[ALSA_NAME_MAX];
-};
 
 static int initMixer (snd_mixer_t **mixer, const char *name)
 {
@@ -161,6 +106,18 @@ ALSAMixer::ALSAMixer(const char *sndcard)
 {
     int err;
     LOGI(" Init ALSAMIXER for SNDCARD : %s",sndcard);
+
+    mixerMasterProp =
+        ALSA_PROP(AudioSystem::DEVICE_OUT_ALL, "master", "PCM", "Capture");
+        
+    mixerProp = {
+        ALSA_PROP(AudioSystem::DEVICE_OUT_EARPIECE, "earpiece", "Earpiece", "Capture"),
+        ALSA_PROP(AudioSystem::DEVICE_OUT_SPEAKER, "speaker", "Speaker",  ""),
+        ALSA_PROP(AudioSystem::DEVICE_OUT_WIRED_HEADSET, "headset", "Headphone", "Capture"),
+        ALSA_PROP(AudioSystem::DEVICE_OUT_BLUETOOTH_SCO, "bluetooth.sco", "Bluetooth", "Bluetooth Capture"),
+        ALSA_PROP(AudioSystem::DEVICE_OUT_BLUETOOTH_A2DP, "bluetooth.a2dp", "Bluetooth A2DP", "Bluetooth A2DP Capture"),
+        ALSA_PROP(static_cast<AudioSystem::audio_devices>(0), "", NULL, NULL)
+    };
 
     initMixer (&mMixer[SND_PCM_STREAM_PLAYBACK], sndcard);
     initMixer (&mMixer[SND_PCM_STREAM_CAPTURE], sndcard);
