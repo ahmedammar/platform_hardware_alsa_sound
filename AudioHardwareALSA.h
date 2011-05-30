@@ -15,6 +15,8 @@
  ** limitations under the License.
  */
 
+/* Copyright 2010-2011 Freescale Semiconductor Inc. */
+
 #ifndef ANDROID_AUDIO_HARDWARE_ALSA_H
 #define ANDROID_AUDIO_HARDWARE_ALSA_H
 
