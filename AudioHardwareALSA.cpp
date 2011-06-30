@@ -170,6 +170,9 @@ static int findSoundCards(char **cardname)
 }
 
 AudioHardwareALSA::AudioHardwareALSA() :
+    mMixer(0),
+    mMixerSpdif(0),
+    mMixerSgtl5000(0),
     mALSADevice(0),
     mAcousticDevice(0)
 {
@@ -178,8 +181,8 @@ AudioHardwareALSA::AudioHardwareALSA() :
     char snd_sgtl5000[32], snd_spdif[32];
     char **cardname = new char*[MAXCARDSNUM];
     for (int i = 0; i < MAXCARDSNUM; i++) {
-	cardname[i] = new char[128];
-	memset(cardname[i],0,128);
+	   cardname[i] = new char[128];
+	   memset(cardname[i],0,128);
     }
     int id;
     int err = hw_get_module(ALSA_HARDWARE_MODULE_ID,
@@ -199,26 +202,26 @@ AudioHardwareALSA::AudioHardwareALSA() :
     /* found out sound cards in the system  and new mixer controller for them*/
     err = findSoundCards(cardname);
     if (err == 0) {
-	for (id = 0; id < MAXCARDSNUM; id++) {
-	    if(cardname[id] && strstr(cardname[id],SPDIF)){
-		LOGD("  CARD NAME: %s ID %d", cardname[id],id);
-		sprintf(snd_spdif,"hw:0%d",id);
-		sprintf(snd_spdif,"hw:CARD=%d",id);
-		mMixerSpdif    = new ALSAMixer(snd_spdif);
-	    }else if (cardname[id] && strstr(cardname[id],SGTL5000)){
-		LOGD("  CARD NAME: %s ID %d", cardname[id],id);
-		sprintf(snd_sgtl5000,"hw:0%d",id);
-		sprintf(snd_sgtl5000,"hw:CARD=%d",id);
-		mMixerSgtl5000 = new ALSAMixer(snd_sgtl5000);
-	    }
-	}
+        for (id = 0; id < MAXCARDSNUM; id++) {
+            if(cardname[id] && strstr(cardname[id],SPDIF)){
+                LOGD("  CARD NAME: %s ID %d", cardname[id],id);
+                sprintf(snd_spdif,"hw:0%d",id);
+                sprintf(snd_spdif,"hw:CARD=%d",id);
+                mMixerSpdif    = new ALSAMixer(snd_spdif);
+	       }else if (cardname[id] && strstr(cardname[id],SGTL5000)){
+                LOGD("  CARD NAME: %s ID %d", cardname[id],id);
+                sprintf(snd_sgtl5000,"hw:0%d",id);
+                sprintf(snd_sgtl5000,"hw:CARD=%d",id);
+                mMixerSgtl5000 = new ALSAMixer(snd_sgtl5000);
+            }
+        }
     } else {
-	LOGE("Don't find any Sound cards, use default");
-	mMixerSgtl5000 = new ALSAMixer("hw:00");
-	mMixerSpdif    = new ALSAMixer("hw:00");
+        LOGE("Don't find any Sound cards, use default");
+        mMixerSgtl5000 = new ALSAMixer("hw:00");
+        mMixerSpdif    = new ALSAMixer("hw:00");
     }
     for (int i = 0; i < MAXCARDSNUM; i++) {
-	delete []cardname[i];
+        delete []cardname[i];
     }
     delete []cardname;
 
@@ -227,8 +230,15 @@ AudioHardwareALSA::AudioHardwareALSA() :
 	   LOGE("allocate memeory to store current sound card name fail");
     memset(mCurCard,0,sizeof(mCurCard));
     /* set current card as sgtl5000 default */
-    strcpy(mCurCard,SGTL5000);
-    mMixer = mMixerSgtl5000;
+    if(mMixerSgtl5000)
+    {
+        strcpy(mCurCard,SGTL5000);
+        mMixer = mMixerSgtl5000;
+    }else if(mMixerSpdif)
+    {
+        strcpy(mCurCard,SPDIF);
+        mMixer = mMixerSpdif;        
+    }
 
     err = hw_get_module(ACOUSTICS_HARDWARE_MODULE_ID,
             (hw_module_t const**)&module);
@@ -336,13 +346,13 @@ AudioHardwareALSA::openOutputStream(uint32_t devices,
         if (it->devices & devices) {
             err = mALSADevice->open(&(*it), devices, mode());
             if (err) break;
-	    if (devices & AudioSystem::DEVICE_OUT_WIRED_HDMI){
-		strcpy(mCurCard ,SPDIF);
-		mMixer = mMixerSpdif;
-	    } else {
-		strcpy(mCurCard,SGTL5000);
-		mMixer = mMixerSgtl5000;
-	    }
+            if (devices & AudioSystem::DEVICE_OUT_WIRED_HDMI){
+                strcpy(mCurCard ,SPDIF);
+                mMixer = mMixerSpdif;
+            } else {
+                strcpy(mCurCard,SGTL5000);
+                mMixer = mMixerSgtl5000;
+            }
 
             out = new AudioStreamOutALSA(this, &(*it));
             err = out->set(format, channels, sampleRate);
@@ -381,13 +391,13 @@ AudioHardwareALSA::openInputStream(uint32_t devices,
         if (it->devices & devices) {
             err = mALSADevice->open(&(*it), devices, mode());
             if (err) break;
-	    if (devices & AudioSystem::DEVICE_OUT_WIRED_HDMI){
-		strcpy(mCurCard ,SPDIF);
-		mMixer = mMixerSpdif;
-	    } else {
-		strcpy(mCurCard,SGTL5000);
-		mMixer = mMixerSgtl5000;
-	    }
+            if (devices & AudioSystem::DEVICE_OUT_WIRED_HDMI){
+                strcpy(mCurCard ,SPDIF);
+                mMixer = mMixerSpdif;
+            } else {
+                strcpy(mCurCard,SGTL5000);
+                mMixer = mMixerSgtl5000;
+            }
 
             in = new AudioStreamInALSA(this, &(*it), acoustics);
             //set the format, channels, sampleRate to 0, so that it can make use of
