@@ -21,7 +21,9 @@
 #define ANDROID_AUDIO_HARDWARE_ALSA_H
 
 #include <utils/List.h>
+#include <utils/threads.h>
 #include <hardware_legacy/AudioHardwareBase.h>
+#include <media/AudioParameter.h>
 
 #include <alsa/asoundlib.h>
 
@@ -203,7 +205,7 @@ protected:
     AudioHardwareALSA *     mParent;
     alsa_handle_t *         mHandle;
 
-    android::Mutex                   mLock;
+    android::Mutex	    mLock;
     bool                    mPowerLock;
 };
 

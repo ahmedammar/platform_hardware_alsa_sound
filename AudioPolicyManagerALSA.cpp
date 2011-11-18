@@ -20,7 +20,7 @@
 #include "AudioPolicyManagerALSA.h"
 #include <media/mediarecorder.h>
 
-namespace android {
+namespace android_audio_legacy {
 
 status_t AudioPolicyManagerALSA::stopInput(audio_io_handle_t input)
 {

@@ -119,7 +119,7 @@ static alsa_handle_t _defaultsIn = {
     handle      : 0,
     format      : SND_PCM_FORMAT_S16_LE, // AudioSystem::PCM_16_BIT
     channels    : 1,
-    sampleRate  : AudioRecord::DEFAULT_SAMPLE_RATE,
+    sampleRate  : android::AudioRecord::DEFAULT_SAMPLE_RATE,
     latency     : 250000, // Desired Delay in usec
     bufferSize  : 2048, // Desired Number of samples
     modPrivate  : 0,
