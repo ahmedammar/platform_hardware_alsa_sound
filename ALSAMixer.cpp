@@ -37,7 +37,7 @@
 
 
 
-namespace android
+namespace android_audio_legacy
 {
 
 // ----------------------------------------------------------------------------

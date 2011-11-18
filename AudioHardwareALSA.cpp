@@ -41,12 +41,12 @@ extern "C"
     //
     // Function for dlsym() to look up for creating a new AudioHardwareInterface.
     //
-    android::AudioHardwareInterface *createAudioHardware(void) {
-        return android::AudioHardwareALSA::create();
+    android_audio_legacy::AudioHardwareInterface *createAudioHardware(void) {
+        return android_audio_legacy::AudioHardwareALSA::create();
     }
 }         // extern "C"
 
-namespace android
+namespace android_audio_legacy
 {
 
 // ----------------------------------------------------------------------------

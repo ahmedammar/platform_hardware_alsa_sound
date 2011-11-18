@@ -33,7 +33,7 @@
 #define ALSA_DEFAULT_SAMPLE_RATE 44100 // in Hz
 #endif
 
-namespace android
+namespace android_audio_legacy
 {
 
 static int s_device_open(const hw_module_t*, const char*, hw_device_t**);

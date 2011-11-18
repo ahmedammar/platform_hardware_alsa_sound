@@ -33,7 +33,7 @@
 
 #include "AudioHardwareALSA.h"
 
-namespace android
+namespace android_audio_legacy
 {
 
 // ----------------------------------------------------------------------------
@@ -47,7 +47,7 @@ ALSAStreamOps::ALSAStreamOps(AudioHardwareALSA *parent, alsa_handle_t *handle) :
 
 ALSAStreamOps::~ALSAStreamOps()
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
     close();
 }
@@ -161,7 +161,7 @@ status_t ALSAStreamOps::setParameters(const String8& keyValuePairs)
     LOGV("setParameters() %s", keyValuePairs.string());
 
     if (param.getInt(key, device) == NO_ERROR) {
-        AutoMutex lock(mLock);
+        android::AutoMutex lock(mLock);
         mParent->mALSADevice->route(mHandle, (uint32_t)device, mParent->mode());
         param.remove(key);
     }

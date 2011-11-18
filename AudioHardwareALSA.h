@@ -27,7 +27,7 @@
 
 #include <hardware/hardware.h>
 
-namespace android
+namespace android_audio_legacy
 {
 
 class AudioHardwareALSA;
@@ -55,7 +55,7 @@ struct alsa_handle_t {
     int                 mmap; // mmap flags
 };
 
-typedef List<alsa_handle_t> ALSAHandleList;
+typedef android::List<struct alsa_handle_t> ALSAHandleList;
 
 struct alsa_device_t {
     hw_device_t common;
@@ -203,7 +203,7 @@ protected:
     AudioHardwareALSA *     mParent;
     alsa_handle_t *         mHandle;
 
-    Mutex                   mLock;
+    android::Mutex                   mLock;
     bool                    mPowerLock;
 };
 
@@ -310,6 +310,8 @@ public:
     // Such loss typically occurs when the user space process is blocked longer than the capacity of audio driver buffers.
     // Unit: the number of input audio frames
     virtual unsigned int  getInputFramesLost() const;
+    virtual status_t addAudioEffect(effect_handle_t effect) { return 0; }
+    virtual status_t removeAudioEffect(effect_handle_t effect) { return 0; }
 
     status_t            setAcousticParams(void* params);
 

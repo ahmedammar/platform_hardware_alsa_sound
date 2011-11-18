@@ -37,7 +37,7 @@
 #define ALSA_DEFAULT_SAMPLE_RATE 44100 // in Hz
 #endif
 
-namespace android
+namespace android_audio_legacy
 {
 
 // ----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ status_t AudioStreamOutALSA::setVolume(float left, float right)
 
 ssize_t AudioStreamOutALSA::write(const void *buffer, size_t bytes)
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
     if (!mPowerLock) {
         acquire_wake_lock (PARTIAL_WAKE_LOCK, "AudioOutLock");
@@ -133,14 +133,14 @@ status_t AudioStreamOutALSA::dump(int fd, const Vector<String16>& args)
 
 status_t AudioStreamOutALSA::open(int mode)
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
     return ALSAStreamOps::open(mode);
 }
 
 status_t AudioStreamOutALSA::close()
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
     snd_pcm_drain (mHandle->handle);
     ALSAStreamOps::close();
@@ -155,7 +155,7 @@ status_t AudioStreamOutALSA::close()
 
 status_t AudioStreamOutALSA::standby()
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
     snd_pcm_drain (mHandle->handle);
 

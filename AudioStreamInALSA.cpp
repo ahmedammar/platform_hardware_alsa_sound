@@ -33,7 +33,7 @@
 
 #include "AudioHardwareALSA.h"
 
-namespace android
+namespace android_audio_legacy
 {
 
 AudioStreamInALSA::AudioStreamInALSA(AudioHardwareALSA *parent,
@@ -60,7 +60,7 @@ status_t AudioStreamInALSA::setGain(float gain)
 
 ssize_t AudioStreamInALSA::read(void *buffer, ssize_t bytes)
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
     if (!mPowerLock) {
         acquire_wake_lock (PARTIAL_WAKE_LOCK, "AudioInLock");
@@ -105,7 +105,7 @@ status_t AudioStreamInALSA::dump(int fd, const Vector<String16>& args)
 
 status_t AudioStreamInALSA::open(int mode)
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
     status_t status = ALSAStreamOps::open(mode);
 
@@ -119,7 +119,7 @@ status_t AudioStreamInALSA::open(int mode)
 
 status_t AudioStreamInALSA::close()
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
     acoustic_device_t *aDev = acoustics();
 
@@ -137,7 +137,7 @@ status_t AudioStreamInALSA::close()
 
 status_t AudioStreamInALSA::standby()
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
     if (mPowerLock) {
         release_wake_lock ("AudioInLock");
@@ -149,7 +149,7 @@ status_t AudioStreamInALSA::standby()
 
 void AudioStreamInALSA::resetFramesLost()
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
     mFramesLost = 0;
 }
 
@@ -164,7 +164,7 @@ unsigned int AudioStreamInALSA::getInputFramesLost() const
 
 status_t AudioStreamInALSA::setAcousticParams(void *params)
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
     acoustic_device_t *aDev = acoustics();
 
