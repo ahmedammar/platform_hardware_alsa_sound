@@ -33,9 +33,10 @@
 
 #include "AudioHardwareALSA.h"
 
-namespace android
+namespace android_audio_legacy
 {
 
+using namespace android;
 // ----------------------------------------------------------------------------
 
 ALSAStreamOps::ALSAStreamOps(AudioHardwareALSA *parent, alsa_handle_t *handle) :

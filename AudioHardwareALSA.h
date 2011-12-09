@@ -21,14 +21,17 @@
 #define ANDROID_AUDIO_HARDWARE_ALSA_H
 
 #include <utils/List.h>
+#include <utils/threads.h>
 #include <hardware_legacy/AudioHardwareBase.h>
 
 #include <alsa/asoundlib.h>
 
 #include <hardware/hardware.h>
 
-namespace android
+namespace android_audio_legacy
 {
+
+using namespace android;
 
 class AudioHardwareALSA;
 
@@ -315,6 +318,16 @@ public:
 
     status_t            open(int mode);
     status_t            close();
+
+    virtual status_t addAudioEffect(effect_handle_t effect)
+    {
+        return INVALID_OPERATION;
+    }
+
+    virtual status_t removeAudioEffect(effect_handle_t effect)
+    {
+        return INVALID_OPERATION;
+    }
 
 private:
     void                resetFramesLost();

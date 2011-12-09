@@ -42,13 +42,15 @@ extern "C"
     //
     // Function for dlsym() to look up for creating a new AudioHardwareInterface.
     //
-    android::AudioHardwareInterface *createAudioHardware(void) {
-        return android::AudioHardwareALSA::create();
+    android_audio_legacy::AudioHardwareInterface *createAudioHardware(void) {
+        return android_audio_legacy::AudioHardwareALSA::create();
     }
 }         // extern "C"
 
-namespace android
+namespace android_audio_legacy
 {
+
+    using namespace android;
 
 // ----------------------------------------------------------------------------
 
@@ -345,13 +347,13 @@ AudioHardwareALSA::openOutputStream(uint32_t devices,
         if (it->devices & devices) {
             err = mALSADevice->open(&(*it), devices, mode());
             if (err) break;
-            if (devices & AudioSystem::DEVICE_OUT_WIRED_HDMI){
+            /*if (devices & AudioSystem::DEVICE_OUT_WIRED_HDMI){
                 strcpy(mCurCard ,SPDIF);
                 mMixer = mMixerSpdif;
-            } else {
+            } else {*/
                 strcpy(mCurCard,SGTL5000);
                 mMixer = mMixerSgtl5000;
-            }
+            //}
 
             out = new AudioStreamOutALSA(this, &(*it));
             err = out->set(format, channels, sampleRate);
@@ -393,13 +395,13 @@ AudioHardwareALSA::openInputStream(uint32_t devices,
         if (it->devices & devices) {
             err = mALSADevice->open(&(*it), devices, mode());
             if (err) break;
-            if (devices & AudioSystem::DEVICE_OUT_WIRED_HDMI){
+            /*if (devices & AudioSystem::DEVICE_OUT_WIRED_HDMI){
                 strcpy(mCurCard ,SPDIF);
                 mMixer = mMixerSpdif;
-            } else {
+            } else {*/
                 strcpy(mCurCard,SGTL5000);
                 mMixer = mMixerSgtl5000;
-            }
+            //}
 
             in = new AudioStreamInALSA(this, &(*it), acoustics);
             //set the format, channels, sampleRate to 0, so that it can make use of

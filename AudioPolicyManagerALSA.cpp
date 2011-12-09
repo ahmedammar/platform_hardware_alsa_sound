@@ -15,12 +15,14 @@
  */
 
 #define LOG_TAG "AudioPolicyManagerALSA"
-//#define LOG_NDEBUG 0
+#define LOG_NDEBUG 0
 #include <utils/Log.h>
 #include "AudioPolicyManagerALSA.h"
 #include <media/mediarecorder.h>
 
-namespace android {
+namespace android_audio_legacy {
+
+using namespace android;
 
 status_t AudioPolicyManagerALSA::stopInput(audio_io_handle_t input)
 {

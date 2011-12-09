@@ -23,8 +23,9 @@
 #include <hardware_legacy/AudioPolicyManagerBase.h>
 
 
-namespace android {
+namespace android_audio_legacy {
 
+using namespace android;
 // ----------------------------------------------------------------------------
 
 #define MAX_DEVICE_ADDRESS_LEN 20
@@ -34,7 +35,7 @@ namespace android {
 #define SONIFICATION_HEADSET_VOLUME_MIN  0.016
 // Time in seconds during which we consider that music is still active after a music
 // track was stopped - see computeVolume()
-#define SONIFICATION_HEADSET_MUSIC_DELAY  5
+//#define SONIFICATION_HEADSET_MUSIC_DELAY  5
 class AudioPolicyManagerALSA: public AudioPolicyManagerBase
 {
 
